@@ -4,16 +4,16 @@ import java.util.Map;
 
 public class SentimentClassifier {
 
-	private static ArrayList<Pair> train_reviews;
-	private static Map<String, Integer> word_frequency;
-	private static ArrayList<String> word_list;
-	private static ArrayList<Pair> test_reviews;
-	private static double PositiveProbability;
-	private static double NegativeProbability;
-	private static Map<String, Integer> positive_word_frequency;
-	private static Map<String, Integer> negative_word_frequency;
-	private static ArrayList<Pair> positive_train_reviews;
-	private static ArrayList<Pair> negative_train_reviews;
+	static ArrayList<Pair> train_reviews;
+	static Map<String, Integer> word_frequency;
+	static ArrayList<String> word_list;
+	static ArrayList<Pair> test_reviews;
+	static double PositiveProbability;
+	static double NegativeProbability;
+	static Map<String, Integer> positive_word_frequency;
+	static Map<String, Integer> negative_word_frequency;
+	static ArrayList<Pair> positive_train_reviews;
+	static ArrayList<Pair> negative_train_reviews;
 
 	public static void main(String[] args) {
 
@@ -34,16 +34,9 @@ public class SentimentClassifier {
 		int numberOfUniqueWords = word_frequency.size();
 		double PosP = 1;
 		double NegP = 1;
-		
-		
-		
 
-		
-		//-----------------------------------EDIT-------------------------------------------
-		
-		
-		
-		
+		// -----------------------------------EDIT-------------------------------------------
+
 		// USING THE TOKENIZER HELPER CLASS
 		String word_vector1 = (String) negative_train_reviews.get(4).getL();
 		Tokenizer token = new Tokenizer();
@@ -185,7 +178,7 @@ public class SentimentClassifier {
 
 		// go through each review
 		for (int i = 0; i < positive.size(); i++) {
-
+System.out.println("pos " + i);
 			String word_vector = (String) positive.get(i).getL();
 
 			// USING THE TOKENIZER HELPER CLASS
@@ -220,8 +213,8 @@ public class SentimentClassifier {
 		//
 		//
 
-		for (int i = 0; i < positive.size(); i++) {
-
+		for (int i = 0; i <negative.size(); i++) {
+			System.out.println("neg " + i);
 			String word_vector = (String) negative.get(i).getL();
 
 			// USING THE TOKENIZER HELPER CLASS
