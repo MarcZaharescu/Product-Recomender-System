@@ -1,3 +1,4 @@
+package General;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +12,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import NaturalLanguageProcessing.Tokenizer;
 
 public class DatabaseQuery {
 

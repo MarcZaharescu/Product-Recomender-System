@@ -1,3 +1,4 @@
+package General;
 
 public class Pair<L, R> {
 	public L x;

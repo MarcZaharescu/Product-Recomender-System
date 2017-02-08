@@ -1,8 +1,12 @@
+package SentimentAnalysis;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import General.Pair;
+import NaturalLanguageProcessing.Tokenizer;
 
 public class ReadSentimentTrainData {
 	public static String review;

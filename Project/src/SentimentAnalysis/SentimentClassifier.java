@@ -1,6 +1,11 @@
+package SentimentAnalysis;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import General.MapUtil;
+import General.Pair;
+import NaturalLanguageProcessing.Tokenizer;
 
 public class SentimentClassifier {
 
