@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="6" passed="6">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="53" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="53" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+      <class name="test.PorterAlgorithm_Test">
+        <test-method status="PASS" signature="setUP()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="setUP" is-config="true" duration-ms="10" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUP -->
+        <test-method status="PASS" signature="test_checkRule1()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule1" duration-ms="12" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule1 -->
+        <test-method status="PASS" signature="test_checkRule2()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule2" duration-ms="1" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule2 -->
+        <test-method status="PASS" signature="test_checkRule3()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule3" duration-ms="1" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule3 -->
+        <test-method status="PASS" signature="test_checkRule4()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule4" duration-ms="1" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule4 -->
+        <test-method status="PASS" signature="test_checkRule5()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule5" duration-ms="1" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule5 -->
+        <test-method status="PASS" signature="test_checkRule6()[pri:0, instance:test.PorterAlgorithm_Test@2d082059]" name="test_checkRule6" duration-ms="1" started-at="2017-02-10T18:06:22Z" finished-at="2017-02-10T18:06:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_checkRule6 -->
+      </class> <!-- test.PorterAlgorithm_Test -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
