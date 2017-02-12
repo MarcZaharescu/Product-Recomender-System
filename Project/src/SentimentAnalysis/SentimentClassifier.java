@@ -1,7 +1,11 @@
 package SentimentAnalysis;
+
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import General.MapUtil;
 import General.Pair;
@@ -11,7 +15,7 @@ public class SentimentClassifier {
 
 	static ArrayList<Pair> train_reviews;
 	static Map<String, Integer> word_frequency;
-	static ArrayList<String> word_list;
+	static Set<String> word_list;
 	static ArrayList<Pair> test_reviews;
 	static double PositiveProbability;
 	static double NegativeProbability;
@@ -21,51 +25,6 @@ public class SentimentClassifier {
 	static ArrayList<Pair> negative_train_reviews;
 
 	public static void main(String[] args) {
-
-		// read the train data
-		readTrainData();
-		// compute the word frequency list
-		computeWordFrequencyList(positive_train_reviews, negative_train_reviews);
-		// extract features for test reviews
-		for (Pair review : test_reviews) {
-			featureExtractor(review);
-			break;
-		}
-
-		// getOverallProbability
-		computeTotalPositiveandNegativeProbability(positive_train_reviews,
-				negative_train_reviews);
-		// getPositiveProbabilityForWord
-		int numberOfUniqueWords = word_frequency.size();
-		double PosP = 1;
-		double NegP = 1;
-
-		// -----------------------------------EDIT-------------------------------------------
-
-		// USING THE TOKENIZER HELPER CLASS
-		String word_vector1 = (String) negative_train_reviews.get(4).getL();
-		Tokenizer token = new Tokenizer();
-		// lower the case
-		word_vector1 = token.toLowerCase(word_vector1);
-		// separate into words
-		// remove stop words
-		ArrayList<String> words = token.removeStopWordsandStem(token
-				.separateWords(word_vector1));
-
-		for (String word : words) {
-			double posP_wi = (double) getPositiveProbabilityForWord(
-					positive_word_frequency, word, numberOfUniqueWords);
-			double negP_wi = (double) getNegativeProbabilityForWord(
-					negative_word_frequency, word, numberOfUniqueWords);
-
-			PosP = PosP * posP_wi;
-			NegP = NegP * negP_wi;
-		}
-
-		PosP = PosP * PositiveProbability;
-		NegP = NegP * NegativeProbability;
-		System.out.println("Positive " + PosP);
-		System.out.println("Negative " + NegP);
 
 	}
 
@@ -120,6 +79,30 @@ public class SentimentClassifier {
 
 	}
 
+	public static double getTotalPositiveProbability(ArrayList<String> words) {
+		int numberOfUniqueWords = word_list.size();
+		double PosP = 1.0;
+
+		for (String word : words) {
+			double posP_wi = (double) getPositiveProbabilityForWord(
+					positive_word_frequency, word, numberOfUniqueWords);
+			PosP = PosP * posP_wi;
+		}
+		return PositiveProbability*PosP;
+	}
+	
+	public static double getTotalNegativeProbability(ArrayList<String> words) {
+		int numberOfUniqueWords = word_list.size();
+		double NegP = 1.0;
+
+		for (String word : words) {
+			double posP_wi = (double) getNegativeProbabilityForWord(
+					negative_word_frequency, word, numberOfUniqueWords);
+			NegP = NegP * posP_wi;
+		}
+		return NegativeProbability*NegP;
+	}
+
 	public static void computeTotalPositiveandNegativeProbability(
 			ArrayList<Pair> positive, ArrayList<Pair> negative) {
 		PositiveProbability = (double) positive.size()
@@ -171,7 +154,7 @@ public class SentimentClassifier {
 		Pair<String, Integer> touple;
 		positive_word_frequency = new HashMap<>();
 		negative_word_frequency = new HashMap<>();
-		word_list = new ArrayList<String>();
+		word_list = new HashSet<String>();
 		// total unique words frequency from reviews
 		word_frequency = new HashMap<>();
 
@@ -183,7 +166,7 @@ public class SentimentClassifier {
 
 		// go through each review
 		for (int i = 0; i < positive.size(); i++) {
-System.out.println("pos " + i);
+			System.out.println("pos " + i);
 			String word_vector = (String) positive.get(i).getL();
 
 			// USING THE TOKENIZER HELPER CLASS
@@ -218,7 +201,7 @@ System.out.println("pos " + i);
 		//
 		//
 
-		for (int i = 0; i <negative.size(); i++) {
+		for (int i = 0; i < negative.size(); i++) {
 			System.out.println("neg " + i);
 			String word_vector = (String) negative.get(i).getL();
 
@@ -252,7 +235,7 @@ System.out.println("pos " + i);
 				word_frequency.put(word, count_all);
 			}
 		}
-		// sort the list
+		// sort the list - keep only the first 5000
 		negative_word_frequency = MapUtil.sortByValue(negative_word_frequency);
 		word_list.addAll(negative_word_frequency.keySet());
 

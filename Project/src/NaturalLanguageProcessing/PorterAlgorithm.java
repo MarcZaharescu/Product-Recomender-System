@@ -156,12 +156,11 @@ public class PorterAlgorithm {
 	}
 
 	public static String Rule1(String para_word) {
-		
+		 
 		
 		int check = 0;
 		boolean flag_1 = false, flag_2 = false;
 		int last = para_word.length();
-		System.out.println("before k "+ para_word);
 		
 		// if it ends in s
 		if (para_word.charAt(last - 1) == 's') {
@@ -215,7 +214,6 @@ public class PorterAlgorithm {
 
 				}
 				// if it ends in at or bl or iz -> add and e
-				System.out.println(para_word);
 				if (flag_2 == true
 						&& (para_word.substring(last - 2, last).equals("at")
 								|| para_word.substring(last - 2, last).equals(

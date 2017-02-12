@@ -1,7 +1,10 @@
 package SentimentAnalysis;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,48 +33,57 @@ public class ReadSentimentTrainData {
 		sc.computeTotalPositiveandNegativeProbability(positive_train_reviews,
 				negative_train_reviews);
 
-		int index1=0;
-		for(String wd: sc.negative_word_frequency.keySet())
-		{
-			System.out.println(wd +" : " +sc.negative_word_frequency.get(wd));
-			index1++;
-		if(index1>50)
-			break;
-		}
-		
-		System.out.println("don't" +" : " +sc.negative_word_frequency.get("don't like"));
-		System.out.println("don't" +" : " +sc.positive_word_frequency.get("don't like"));
-		
-		System.out.println(sc.positive_word_frequency.size() + "    " +sc.negative_word_frequency.size());
-		// getPositiveProbabilityForWord
-		int numberOfUniqueWords = sc.word_frequency.size();
-		double PosP = 1;
-		double NegP = 1;
+		// write data to file
+		FileWriter fr = new FileWriter(
+				"C:/Users/User/Desktop/trainDirectory/Neg.csv");
+		FileWriter fr1 = new FileWriter(
+				"C:/Users/User/Desktop/trainDirectory/Pos.csv");
+		String currentLine;
+		String[] col;
 
+		BufferedWriter br_neg = new BufferedWriter(fr);
+		BufferedWriter br_pos = new BufferedWriter(fr1);
+		int index1 = 0;
+
+		br_neg.write("word,freq,\n ");
+		for (String wd : sc.negative_word_frequency.keySet()) {
+			br_neg.write(wd + "," + sc.negative_word_frequency.get(wd) + "\n ");
+			System.out.println(wd + " : " + sc.negative_word_frequency.get(wd));
+			index1++;
+
+		}
+
+		br_pos.write("word,freq,\n ");
+		for (String wd : sc.positive_word_frequency.keySet()) {
+			br_pos.write(wd + "," + sc.positive_word_frequency.get(wd) + "\n ");
+			System.out.println(wd + " : " + sc.positive_word_frequency.get(wd));
+			index1++;
+
+		}
+		br_neg.flush();
+		br_neg.close();
+		br_pos.flush();
+		br_pos.close();
+
+		System.out.println(sc.positive_word_frequency.size() + "    "
+				+ sc.negative_word_frequency.size());
+		// getPositiveProbabilityForWord
+		int numberOfUniqueWords = sc.word_list.size();
+		 
 		// USING THE TOKENIZER HELPER CLASS
 		System.out.println(negative_train_reviews.size());
-		String word_vector1 = "nice soft pretty amazing good";//(String) negative_train_reviews.get(4).getL();
+		String word_vector1 = " fit great look comfortable well good love nice";
+		// (String) negative_train_reviews.get(4).getL();
 		Tokenizer token = new Tokenizer();
 		// lower the case
 		word_vector1 = token.toLowerCase(word_vector1);
 		// separate into words
 		// remove stop words
 		ArrayList<String> words = token.NLP(word_vector1);
-
-		for (String word : words) {
-			double posP_wi = (double) sc.getPositiveProbabilityForWord(
-					sc.positive_word_frequency, word, numberOfUniqueWords);
-			double negP_wi = (double) sc.getNegativeProbabilityForWord(
-					sc.negative_word_frequency, word, numberOfUniqueWords);
-
-			PosP = PosP * posP_wi;
-			NegP = NegP * negP_wi;
-		}
-
-		PosP = PosP * sc.PositiveProbability;
-		NegP = NegP * sc.NegativeProbability;
-		System.out.println("Positive " + PosP);
-		System.out.println("Negative " + NegP);
+		System.out.println(numberOfUniqueWords);
+		 
+		System.out.println("Positive " + sc.getTotalPositiveProbability(words));
+		System.out.println("Negative " + sc.getTotalNegativeProbability(words));
 
 	}
 
@@ -89,36 +101,32 @@ public class ReadSentimentTrainData {
 
 		BufferedReader br = new BufferedReader(fr);
 
-	 int negIndex=0, posIndex=0;
+		int negIndex = 0, posIndex = 0;
 		while ((currentLine = br.readLine()) != null) {
 			col = currentLine.split(",");
 			review = col[1];
 			sentiment = col[2];
- 
+
 			// add positive reviews
-			
-			if (sentiment.equals("Positive") && posIndex<18000) {
+			if (sentiment.equals("Positive") && posIndex < 18000) {
 				touple = new Pair(review, sentiment);
 				positive_train_reviews.add(touple);
 				posIndex++;
-				 
 
 			}
 
 			// add negative reviews
-		
-			if (sentiment.equals("Negative")&& negIndex<18000) {
+			if (sentiment.equals("Negative") && negIndex < 18000) {
 				touple = new Pair(review, sentiment);
 				negative_train_reviews.add(touple);
-			  negIndex++;
+				negIndex++;
 			}
-			
-			
-			//if neg reviews = pos reviews = 18000 break
-			System.out.println(negIndex + " - "+  posIndex);
-			if(negIndex>=18000 && posIndex>=18000)
+
+			// if neg reviews = pos reviews = 18000 break
+			System.out.println(negIndex + " - " + posIndex);
+			if (negIndex >= 18000 && posIndex >= 18000)
 				break;
-			
+
 		}
 
 		// read test reviews

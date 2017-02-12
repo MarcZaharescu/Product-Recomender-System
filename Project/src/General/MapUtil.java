@@ -14,8 +14,15 @@ public class MapUtil {
 		});
 
 		Map<K, V> result = new LinkedHashMap<>();
+		int index=0;
 		for (Map.Entry<K, V> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
+			
+			//only first 5000 features
+			if(index>=5000)
+				break;
+			
+			index++;
 		}
 		return result;
 	}

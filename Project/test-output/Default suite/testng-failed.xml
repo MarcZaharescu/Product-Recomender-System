@@ -5,8 +5,8 @@
     <classes>
       <class name="test.PorterAlgorithm_Test">
         <methods>
+          <include name="test_checkRule5"/>
           <include name="setUP"/>
-          <include name="test_checkRule6"/>
         </methods>
       </class> <!-- test.PorterAlgorithm_Test -->
     </classes>
