@@ -49,7 +49,7 @@ public class SentimentClassifier {
 		word_vector1 = token.toLowerCase(word_vector1);
 		// separate into words
 		// remove stop words
-		ArrayList<String> words = token.removeStopWords(token
+		ArrayList<String> words = token.removeStopWordsandStem(token
 				.separateWords(word_vector1));
 
 		for (String word : words) {
@@ -192,7 +192,7 @@ System.out.println("pos " + i);
 			word_vector = token.toLowerCase(word_vector);
 			// separate into words
 			// remove stop words
-			ArrayList<String> words = token.removeStopWords(token
+			ArrayList<String> words = token.removeStopWordsandStem(token
 					.separateWords(word_vector));
 
 			Integer count = 0;
@@ -228,7 +228,7 @@ System.out.println("pos " + i);
 			word_vector = token.toLowerCase(word_vector);
 			// separate into words
 			// remove stop words
-			ArrayList<String> words = token.removeStopWords(token
+			ArrayList<String> words = token.removeStopWordsandStem(token
 					.separateWords(word_vector));
 
 			Integer count = 0, count_all = 0;
@@ -274,7 +274,7 @@ System.out.println("pos " + i);
 		word_vector = token.toLowerCase(word_vector);
 		// separate into words
 		// remove stop words
-		ArrayList<String> words = token.removeStopWords(token
+		ArrayList<String> words = token.removeStopWordsandStem(token
 				.separateWords(word_vector));
 
 		for (String word : word_list) {

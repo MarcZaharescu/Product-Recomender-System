@@ -32,7 +32,7 @@ public class DatabaseQuery {
 		test = token.toLowerCase(test);
 		// separate into words
 		// remove stop words
-		ArrayList<String> words=token.removeStopWords(token.separateWords(test));
+		ArrayList<String> words=token.removeStopWordsandStem(token.separateWords(test));
 		FetchImages(dbConn,words);
 	}
 

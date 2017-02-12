@@ -56,8 +56,7 @@ public class ReadSentimentTrainData {
 		word_vector1 = token.toLowerCase(word_vector1);
 		// separate into words
 		// remove stop words
-		ArrayList<String> words = token.removeStopWords(token
-				.separateWords(word_vector1));
+		ArrayList<String> words = token.NLP(word_vector1);
 
 		for (String word : words) {
 			double posP_wi = (double) sc.getPositiveProbabilityForWord(

@@ -10,22 +10,23 @@ public class PorterAlgorithm {
 	public static void main(String[] args) {
 
 		// TODO Auto-generated method stub
+		System.out.println(Rule4("realize"));
+		
+		System.out.println(ConsonantFrequency("re"));
+	 
 
- 
-
-		System.out.println(Stem("electrolize"));
 		 
 
 	}
-	public static String Stem(String word)
-	{
-		word=Rule1(word);
-		word=Rule2(word);
-		word=Rule3(word);
-		word=Rule4(word);
-		word=Rule5(word);
-		word=Rule6(word);
-		
+
+	public static String Stem(String word) {
+		word = Rule1(word);
+		word = Rule2(word);
+		word = Rule3(word);
+		word = Rule4(word);
+		word = Rule5(word);
+		word = Rule6(word);
+
 		return word;
 	}
 
@@ -51,38 +52,81 @@ public class PorterAlgorithm {
 		return false;
 	}
 
+	public static String turnIntoCV(String para_word) {
+		// *helper function* - changing a word into a [V]CV[C] stream -
+		String temp = "";
+		for (int i = 0; i < para_word.length() - 1; i++) {
+
+			// beginning special cases
+			if (i == 0) {
+				if (para_word.charAt(i) == 'y'
+						&& !checkIfVowel(para_word.charAt(i + 1)))
+					temp = temp + "V";
+			}
+
+			if (i > 0) {
+				if (para_word.charAt(i) == 'y'
+						&& !checkIfVowel(para_word.charAt(i + 1))
+						&& !(checkIfVowel(para_word.charAt(i + -1)))) {
+					temp = temp + "V";
+				}
+			}
+
+			// normal cases
+			if ((checkIfVowel(para_word.charAt(i)))
+					&& !checkIfVowel(para_word.charAt(i + 1))) {
+				temp = temp + "V";
+			} else if (!checkIfVowel(para_word.charAt(i))
+					&& (para_word.charAt(i + 1) == 'y' || checkIfVowel(para_word
+							.charAt(i + 1)))) {
+				temp = temp + "C";
+
+			}
+
+			// ending special cases
+			if (para_word.length() >= 3) {
+				if (i == para_word.length() - 2) {
+					if (para_word.charAt(i + 1) == 'y'
+							&& !checkIfVowel(para_word.charAt(i - 1)))
+						temp = temp + "V";
+
+				}
+			}
+		
+			if (para_word.length() >= 2) {
+				if (i == para_word.length() - 2) {
+					if (checkIfVowel(para_word.charAt(i + 1)))
+						temp = temp + "V";
+					else
+						temp = temp + "C";
+				}
+			}
+
+		}
+
+		return temp;
+	}
+
 	public static int ConsonantFrequency(String para_word) {
 		// if C-V return 0
 		// if C VC V return 1
 		// if C VCVC V return 2
 
-		int length = para_word.length();
-		
-			
-		 int frequency=0;
-		for (int i = length - 1; i >= 0; i--) {
-			int nr = 0;
-
-			 
-
-			 if (i >= 1) {
-				if ((checkIfVowel(para_word.charAt(i)) && !checkIfVowel(para_word
-						.charAt(i - 1)))
-						|| (!checkIfVowel(para_word.charAt(i)) && checkIfVowel(para_word
-								.charAt(i - 1)))) {
-					frequency++;
-					i=i-2;
-				}
-
-			}
-
+		int frequency = 0;
+		String temp = turnIntoCV(para_word);
+ 
+		for (int i = 0; i < temp.length() - 1; i++) {
+			if (temp.charAt(i) == 'V' && temp.charAt(i + 1) == 'C')
+				frequency++;
 		}
+
 		return frequency;
 	}
 
 	public static String transformS(String s1, String s2, String s) {
 		if (s.length() >= s.length() - s1.length()) {
 			String root = s.substring(0, s.length() - s1.length());
+
 			if (ConsonantFrequency(root) > 0)
 				return root + s2;
 		}
@@ -91,7 +135,7 @@ public class PorterAlgorithm {
 	}
 
 	public static boolean endsWith(String sub, String s) {
-		if (s.length() >=  sub.length())
+		if (s.length() >= sub.length())
 			return s.substring(s.length() - sub.length(), s.length()).equals(
 					sub);
 
@@ -101,7 +145,7 @@ public class PorterAlgorithm {
 	public static boolean CVC(int pos, String para_word) {
 		// checks wherer the previous 3 characters before pos were c-v-c
 
-		if (para_word.length() >= pos) {
+		if (para_word.length() >= pos && para_word.length()>3) {
 			if (!checkIfVowel(para_word.charAt(pos - 1))
 					&& checkIfVowel(para_word.charAt(pos - 2))
 					&& !checkIfVowel(para_word.charAt(pos - 3)))
@@ -112,10 +156,13 @@ public class PorterAlgorithm {
 	}
 
 	public static String Rule1(String para_word) {
+		
+		
 		int check = 0;
 		boolean flag_1 = false, flag_2 = false;
 		int last = para_word.length();
-
+		System.out.println("before k "+ para_word);
+		
 		// if it ends in s
 		if (para_word.charAt(last - 1) == 's') {
 
@@ -142,11 +189,12 @@ public class PorterAlgorithm {
 
 		if (last >= 3 && flag_1 == false) {
 			// if it ends in eed
-			if (para_word.substring(last - 3, last).equals("eed")
-					&& (ConsonantFrequency(para_word) > 0)) {
-				para_word = para_word.substring(0, last - 2);
-				flag_2 = true;
-				last = para_word.length();
+			if (para_word.substring(last - 3, last).equals("eed")) {
+				if (ConsonantFrequency(para_word.substring(0, last - 3)) > 0) {
+					para_word = para_word.substring(0, last - 2);
+					flag_2 = true;
+					last = para_word.length();
+				}
 			} else {
 				// if the word ends in ed and vowel in steam get to the root
 				if ((para_word.substring(last - 2, last).equals("ed") && wordSteamHasVowel(para_word
@@ -159,7 +207,7 @@ public class PorterAlgorithm {
 				// if the word ends in ing and vowel in steam get to the root
 				else if (para_word.substring(last - 3, last).equals("ing")
 						&& wordSteamHasVowel(para_word
-								.substring(last - 3, last))) {
+								.substring(0, last-3))) {
 
 					para_word = para_word.substring(0, last - 3);
 					flag_2 = true;
@@ -167,6 +215,7 @@ public class PorterAlgorithm {
 
 				}
 				// if it ends in at or bl or iz -> add and e
+				System.out.println(para_word);
 				if (flag_2 == true
 						&& (para_word.substring(last - 2, last).equals("at")
 								|| para_word.substring(last - 2, last).equals(
@@ -399,19 +448,21 @@ public class PorterAlgorithm {
 		// removes final e
 		int last = para_word.length();
 		int x;
-		
+
 		if (para_word.charAt(last - 1) == 'e') {
-			x = ConsonantFrequency(para_word.substring(0,last-1));  
-			if (x >  1 ||( x==1 && !CVC(last - 1, para_word) && para_word.length()>3)) { 
+			x = ConsonantFrequency(para_word.substring(0, last - 1));
+			if (x > 1
+					|| (x == 1 && !CVC(last - 1, para_word) && para_word
+							.length() > 3)) {
 				para_word = para_word.substring(0, last - 1);
 			}
+		} else if (para_word.charAt(last - 1) == 'l'
+				&& para_word.charAt(last - 2) == 'l'
+				&& ConsonantFrequency(para_word.substring(0, last - 1)) > 1) {
+
+			para_word = para_word.substring(0, last - 1);
 		}
-		else
-		if (para_word.charAt(last - 1) == 'l' && para_word.charAt(last - 2) == 'l'&& ConsonantFrequency(para_word.substring(0,last-1))>1) {
-		 
-				para_word = para_word.substring(0, last - 1);
-			}
-		 
+
 		return para_word;
 
 	}

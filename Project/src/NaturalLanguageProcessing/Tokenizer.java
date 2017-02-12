@@ -24,8 +24,9 @@ public class Tokenizer {
 
 	}
 
-	public ArrayList<String> removeStopWords(List<String> inputList) {
-
+	public ArrayList<String> removeStopWordsandStem(List<String> inputList) {
+		PorterAlgorithm pa= new PorterAlgorithm();
+		
 		ArrayList<String> wordList = new ArrayList<String>();
 		Set<String> stopWordsSet = new HashSet<String>();
 		Set<String> specialWordSet = new HashSet<String>();
@@ -52,7 +53,7 @@ public class Tokenizer {
 				"gives", "go", "going", "got", "group", "grouped", "grouping",
 				"groups", "h", "had", "has", "have", "having", "he", "her",
 				"here", "herself", "high", "high", "him", "himself", "his",
-				"how", "however", "i", "if", "important", "in", "interest",
+				"how", "however", "i", "if", "in", "interest",
 				"interested", "interesting", "interests", "into", "is", "it",
 				"its", "itself", "j", "just", "k", "keep", "keeps", "kind",
 				"knew", "know", "known", "knows", "l", "large", "largely",
@@ -69,7 +70,7 @@ public class Tokenizer {
 				"out", "over", "p", "part", "parted", "parting", "parts",
 				"per", "perhaps", "place", "places", "point", "pointed",
 				"pointing", "points", "present", "presented", "presenting",
-				"presents", "problem", "problems", "put", "puts", "q", "r",
+				"presents", "put", "puts", "q", "r",
 				"really", "right", "right", "room", "rooms", "s", "said",
 				"same", "saw", "say", "says", "second", "seconds", "see",
 				"seeming", "seems", "sees", "several", "shall", "she",
@@ -91,15 +92,16 @@ public class Tokenizer {
 				"youngest", "your", "yours", };
 
 		String[] temp1 = { "not", "don't", "didn't", "haven't", "hadn't" };
-		// add the stop words into the arraylist
+		// add the stop words into the array list
 		for (int i = 0; i < temp.length; i++)
 			stopWordsSet.add(temp[i]);
 
-		// add the special words into the arraylist
+		// add the special words into the array list
 		for (int i = 0; i < temp1.length; i++)
 			specialWordSet.add(temp1[i]);
 
 		String special = "";
+		//main loop
 		for (String word : inputList) {
 
 			if (special.length() > 0) {
@@ -111,13 +113,28 @@ public class Tokenizer {
 			}
 
 			else if (!stopWordsSet.contains(word) && word.length() > 2) {
+				if(word.length()<4)
 				wordList.add(word);
+				else
+				wordList.add(pa.Stem(word));
 			}
 
 		}
 
 		return wordList;
 
+	}
+	
+	public ArrayList<String> NLP(String inputList)
+	{	// lower the case
+		inputList =  toLowerCase(inputList);
+		//separate the words
+		// remove the stop words
+		// stem
+		return removeStopWordsandStem( separateWords(inputList));
+		
+	
+	
 	}
 
 	public String toLowerCase(String input) {
@@ -127,13 +144,8 @@ public class Tokenizer {
 
 	public static void main(String args[]) {
 		Tokenizer token = new Tokenizer();
-		String test = "Hello, this not is a test.";
-		// lower the case
-		test = token.toLowerCase(test);
-		// separate into words
-		System.out.println(token.separateWords(test));
-		// remove stop words
-		System.out.println(token.removeStopWords(token.separateWords(test)));
+		String test = "Hello, this not is a testinged.";
+		System.out.println( token.NLP(test));
 
 	}
 }
