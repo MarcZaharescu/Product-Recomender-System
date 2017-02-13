@@ -28,56 +28,6 @@ public class SentimentClassifier {
 
 	}
 
-	public static void readTrainData() {
-
-		// create a new touple object
-		Pair<String, String> touple;
-
-		// read pos reviews
-		String[] positive_review_list = { "I love this car", "positive",
-				"This view is amazing", "positive",
-				"I feel great this morning", "positive",
-				"I am so excited about the concert", "positive",
-				"He is my best friend", "positive" };
-
-		// read negative reviews
-		String[] negative_review_list = { "I do not like this car", "negative",
-				"This view is horrible", "negative",
-				"I feel tired this morning", "negative",
-				"I am not looking forward to the concert", "negative",
-				"He is my enemy", "negative" };
-
-		positive_train_reviews = new ArrayList<Pair>();
-		// add positive train reviews to the array list
-		for (int i = 0; i < positive_review_list.length - 1; i++) {
-			touple = new Pair(positive_review_list[i],
-					positive_review_list[i + 1]);
-			positive_train_reviews.add(touple);
-			i = i + 1;
-		}
-
-		negative_train_reviews = new ArrayList<Pair>();
-		// add negative train reviews to the array list
-		for (int i = 0; i < negative_review_list.length - 1; i++) {
-			touple = new Pair(negative_review_list[i],
-					negative_review_list[i + 1]);
-			negative_train_reviews.add(touple);
-			i = i + 1;
-		}
-
-		// read test reviews
-		String[] test_review_list = { "feel happy this morning", "positive",
-				"larry friend positive not like that man", "negative",
-				"house not great", "negative", "your song annoying", "negative" };
-		// add test reviews to the array list
-		test_reviews = new ArrayList<Pair>();
-		for (int i = 0; i < test_review_list.length - 1; i++) {
-			touple = new Pair(test_review_list[i], test_review_list[i + 1]);
-			test_reviews.add(touple);
-			i = i + 1;
-		}
-
-	}
 
 	public static double getTotalPositiveProbability(ArrayList<String> words) {
 		int numberOfUniqueWords = word_list.size();
@@ -118,7 +68,7 @@ public class SentimentClassifier {
 		if (word_frequency.get(word) != null)
 			nk = word_frequency.get(word);
 		else
-			nk = 0;
+			nk = 10;
 
 		// nr the words in positive ratings
 		int nrPos = word_frequency.size();
