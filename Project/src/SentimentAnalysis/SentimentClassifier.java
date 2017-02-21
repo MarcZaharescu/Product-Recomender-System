@@ -116,7 +116,7 @@ public class SentimentClassifier {
 
 		// go through each review
 		for (int i = 0; i < positive.size(); i++) {
-			System.out.println("pos " + i);
+			//System.out.println("pos " + i);
 			String word_vector = (String) positive.get(i).getL();
 
 			// USING THE TOKENIZER HELPER CLASS
@@ -152,7 +152,7 @@ public class SentimentClassifier {
 		//
 
 		for (int i = 0; i < negative.size(); i++) {
-			System.out.println("neg " + i);
+			//System.out.println("neg " + i);
 			String word_vector = (String) negative.get(i).getL();
 
 			// USING THE TOKENIZER HELPER CLASS
