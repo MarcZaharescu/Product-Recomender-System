@@ -11,7 +11,6 @@ final public class Matrix {
 		this.data = new double[I][J];
 	}
 
-	 
 	public Matrix(double[][] data) {
 		this.J = data[0].length;
 		this.I = data.length;
@@ -22,6 +21,35 @@ final public class Matrix {
 				this.data[i][j] = data[i][j];
 			}
 
+	}
+
+	public static Matrix split(Matrix A, int start, int end) {
+		int I = A.data.length;
+		int J = A.data[0].length;
+		Matrix temp = new Matrix(end - start, J);
+
+		int k = 0;
+		for (int i = start; i < end; i++) {
+			{
+				for (int j = 0; j < J; j++)
+					temp.data[k][j] = A.data[i][j];
+				k++;
+			}
+
+		}
+
+		return temp;
+	}
+
+	public static double numberOfDifferences(Matrix A, Matrix B) {
+		double diff = 0;
+
+		for (int i = 0; i < A.I; i++)
+			for (int j = 0; j < A.J; j++)
+				if (A.data[i][j] != B.data[i][j])
+					diff++;
+
+		return diff;
 	}
 
 	public static Matrix transposition(Matrix A) {
@@ -52,6 +80,36 @@ final public class Matrix {
 
 		return C;
 
+	}
+
+	public static Matrix outputToClass(Matrix A) {
+		Matrix C = new Matrix(A.I, 1);
+
+		for (int i = 0; i < A.I; i++)
+			for (int j = 0; j < A.J; j++) {
+				if (A.data[i][j] != 0)
+					C.data[i][0] = j + 1;
+			}
+
+		return C;
+	}
+
+	public static Matrix classToOutput(Matrix A) {
+		int nrOfClasses = 3;
+
+		Matrix C = new Matrix(A.I, nrOfClasses);
+		int k = 0;
+		for (int i = 0; i < A.I; i++) {
+			for (int j = 0; j < A.data[i][0]; j++) {
+				k = j;
+				C.data[i][j] = 0;
+			}
+			C.data[i][k] = 1;
+			for (int j = (int) (A.data[i][0] + 1); j < nrOfClasses; j++) {
+				C.data[i][j] = 0;
+			}
+		}
+		return C;
 	}
 
 	public static Matrix multiply(Matrix A, Matrix B) {
@@ -103,13 +161,13 @@ final public class Matrix {
 		return B;
 
 	}
-	public static double sumComponents(Matrix A)
-	{
-		double sum=0;
-		for(int i=0;i<A.I;i++)
-			for(int j=0;j<A.J;j++)
-				sum+=A.data[i][j];
-		
+
+	public static double sumComponents(Matrix A) {
+		double sum = 0;
+		for (int i = 0; i < A.I; i++)
+			for (int j = 0; j < A.J; j++)
+				sum += A.data[i][j];
+
 		return sum;
 	}
 
@@ -157,6 +215,13 @@ final public class Matrix {
 		return C;
 	}
 
+	public static void initialiseOne(Matrix A) {
+		for (int i = 0; i < A.I; i++)
+			for (int j = 0; j < A.J; j++)
+				A.data[i][j] = 1;
+
+	}
+
 	public static Matrix horizontalConcatenation(Matrix A, Matrix B) {
 		int I = A.data.length;
 		int J = A.data[0].length;
@@ -165,14 +230,13 @@ final public class Matrix {
 
 		Matrix C = new Matrix(I, J + J1);
 
-		for (int i = 0; i < I; i++)  
-			for (int j = 0; j < J; j++) 	
-				C.data[i][j]=A.data[i][j];
-			 
-		for (int i = 0; i < I; i++)  
-			for (int j = J; j < J+J1; j++) 	
-				C.data[i][j]=B.data[i][j-J];
-		 
+		for (int i = 0; i < I; i++)
+			for (int j = 0; j < J; j++)
+				C.data[i][j] = A.data[i][j];
+
+		for (int i = 0; i < I; i++)
+			for (int j = J; j < J + J1; j++)
+				C.data[i][j] = B.data[i][j - J];
 
 		return C;
 	}
@@ -226,14 +290,26 @@ final public class Matrix {
 		Matrix I = krocknerMultiplication(A, B);
 		I.print();
 		System.out.println("horizontalConcatenation");
-		
+
 		Matrix J = horizontalConcatenation(A, B);
 		J.print();
 		System.out.println("Sum components");
-		
+
 		double sum = sumComponents(A);
-		System.out.println("sum= "+sum);
-		
+		System.out.println("sum= " + sum);
+
+		System.out.println("Output To Class");
+		double[][] f1 = { { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 } };
+		Matrix F1 = new Matrix(f1);
+		F1 = outputToClass(F1);
+		F1.print();
+		System.out.println();
+
+		System.out.println("Class to Output");
+		F1 = classToOutput(F1);
+		F1.print();
+		System.out.println();
+
 	}
 
 }
