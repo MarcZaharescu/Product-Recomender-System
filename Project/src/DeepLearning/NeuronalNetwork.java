@@ -27,18 +27,19 @@ public class NeuronalNetwork {
 			Matrix weightMatrix, double learningRate, Matrix biasVector, Matrix targetOutput) {
 		
 		Random rand = new Random();
-		int start = 1+ rand.nextInt(inputMatrix.I);
+		int start =   rand.nextInt(inputMatrix.I);
 		int end = inputMatrix.I;
 		
-		Matrix [] outputs = FeedForwardFunction(Matrix.split(inputMatrix, start, end),Matrix.split(weightMatrix, start ,end), Matrix.split(biasVector,start,end));
-		System.out.println(outputs[1].data[0].length);
-		System.out.println(Matrix.split(targetOutput, start, end).data[0].length);
-		Matrix error = Matrix.difference( Matrix.split(targetOutput, start, end) , outputs[1] );
-		
+		Matrix [] outputs = FeedForwardFunction(Matrix.line(inputMatrix, start), weightMatrix,  Matrix.element(biasVector,start));
+		 Matrix error = Matrix.difference( Matrix.line(targetOutput, start ) , outputs[1] );
+		 
 		Matrix B = new Matrix (activateFunctionDerivative(outputs[0]).data);
 		Matrix delta = Matrix.hadamardProduct(error, B);
-		
-		Matrix weights_delta= Matrix.krocknerMultiplication(Matrix.transposition( Matrix.split(inputMatrix, start, end)),delta  ).multiplyScalar(learningRate);
+	 
+		Matrix weights_delta= Matrix.krocknerMultiplication(Matrix.transposition( Matrix.horizontalConcatenation(Matrix.line(inputMatrix, start ),Matrix.element(biasVector, start))),delta  ).multiplyScalar(learningRate);
+		//weights_delta.print();
+		//System.out.println();
+		//weightMatrix.print();
 		weightMatrix = Matrix.sum(weightMatrix, weights_delta);
 		
 		return weightMatrix;
@@ -53,31 +54,37 @@ public class NeuronalNetwork {
 		Matrix testSet = new Matrix(DtestSet.input.data);
 		 
 		 
-		Matrix weightMatrix = weightInitialization(1 / 2, DtrainingSet.count+1, DtrainingSet.input.J);
-
+		Matrix weightMatrix = weightInitialization(0.5, DtrainingSet.input_count+1, DtrainingSet.output_count);
+		
+		int number_of_iterations=5001;
  
  
 		double learning_rate = 0.1;
 		double[] training_error, validation_error, test_error;
-		double[] error_train = new double[501], error_validation = new double[501], error_test = new double[501];
-		double[] classification_error_train = new double[501], classification_error_validation = new double[501], classification_error_test = new double[501];
+		double[] error_train = new double[number_of_iterations], error_validation = new double[number_of_iterations], error_test = new double[number_of_iterations];
+		double[] classification_error_train = new double[number_of_iterations], classification_error_validation = new double[number_of_iterations], classification_error_test = new double[number_of_iterations];
 
 		int index = 0;
 		int classCount =3;
+		
+		//validation treshold
+		double validation_stop_threshold=0.005;
 
  
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < number_of_iterations-1; i++) {
 			// update the weight matrix
 			weightMatrix = backwardPropagation(trainingSet, weightMatrix,
 					learning_rate, DtrainingSet.bias, DtrainingSet.output);
 
+			
 			// training error
 			DataSet trSet = new DataSet(trainingSet,DtrainingSet.output, classCount);
 			training_error = evaluateNetworkError(trSet, weightMatrix);
-			
+			 
 			error_train[index] = training_error[0];
 			classification_error_train[index] = training_error[1];
-
+ 
+		 
 			// validation error
 			DataSet vaSet = new DataSet(validationSet,DvalidationSet.output, classCount);
 			validation_error = evaluateNetworkError(vaSet, weightMatrix);
@@ -91,6 +98,11 @@ public class NeuronalNetwork {
 			
 			error_test[index] = test_error[0];
 			classification_error_test[index] = test_error[1];
+			
+			  if (error_validation[index] < validation_stop_threshold )
+			 	break;
+		       
+		
 
 			// increment the index
 			index++;
@@ -118,14 +130,14 @@ public class NeuronalNetwork {
 		
 		error_test[index] = test_error[0];
 		classification_error_test[index] = test_error[1];
-		
+		 
 
 		// return the weightMatrix + 6 errors;
 		// and weight matrix
-		return new double[] { error_train[501],
-				classification_error_train[501], error_validation[501],
-				classification_error_validation[501], error_test[501],
-				classification_error_test[501] };
+		return new double[] { error_train[index],
+				classification_error_train[index], error_validation[index],
+				classification_error_validation[index], error_test[index],
+				classification_error_test[index] };
 	}
 
 	public static double sigmoidFunction(double x) {
@@ -146,7 +158,7 @@ public class NeuronalNetwork {
 
 		for (int i = 0; i < C.I; i++)
 			for (int j = 0; j < C.J; j++)
-				C.data[i][j] = sigmoidFunction(C.data[i][j]);
+				C.data[i][j] = tanh(C.data[i][j]);
 
 		return C;
 	}
@@ -157,7 +169,7 @@ public class NeuronalNetwork {
 
 		for (int i = 0; i < C.I; i++)
 			for (int j = 0; j < C.J; j++)
-				C.data[i][j] = sigmoidFunctionDerivative(C.data[i][j]);
+				C.data[i][j] = tanh_derivative(C.data[i][j]);
 
 		return C;
 	}
@@ -165,30 +177,43 @@ public class NeuronalNetwork {
 	public static Matrix[] FeedForwardFunction(Matrix inputMatrix,
 			Matrix weightMatrix, Matrix biasnodeMatrix) {
 
-		System.out.println("weightMatrix " + weightMatrix.data.length +" " + weightMatrix.data[0].length);
-		System.out.println("inputMatrix " + inputMatrix.data.length +" " + inputMatrix.data[0].length);
-		System.out.println("horcatInput " + (Matrix.horizontalConcatenation(inputMatrix, biasnodeMatrix)).data.length +" " + (Matrix.horizontalConcatenation(inputMatrix, biasnodeMatrix)).data[0].length);
+		Matrix horcat = Matrix
+				.horizontalConcatenation( inputMatrix , biasnodeMatrix);
 		
-		Matrix net = Matrix
-				.horizontalConcatenation(Matrix.multiply(inputMatrix,  weightMatrix) , biasnodeMatrix);
+		//System.out.println("weightMatrix " + weightMatrix.data.length +" " + weightMatrix.data[0].length);
+		//System.out.println("horcat " +horcat.data.length +" " +horcat.data[0].length);
+		
+		Matrix net = Matrix.multiply(horcat, weightMatrix);
+		 
 		Matrix output = activateFunction(net);
-
+ 
 		return new Matrix[] { net, output };
 		// return output matrix, net matrix
 	}
 
 	public static Matrix weightInitialization(double max,   int height, int width) {
-		Matrix C = new Matrix(height , width);
+		Matrix C = new Matrix(height , width); 
+		Random rand= new Random();
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				C.data[i][j] = ThreadLocalRandom.current().nextDouble(-max,
-						max + 1);
+						max  ) ;
 
 		return C;
 	}
 
 	
+	public static double tanh(double x)
+	{
+		return (Math.tanh(x)+1)/2;
+	}
 	
+	public static double tanh_derivative(double x)
+	{
+		return (1- (Math.tanh(x)* Math.tanh(x)) )/2;
+	}
+	
+
 	public static double[] evaluateNetworkError(DataSet ds,
 			Matrix weightMatrix) {
 		
@@ -203,9 +228,12 @@ public class NeuronalNetwork {
 		int output_count = weightMatrix.J;
 		double regression_error = sum / (sample_count * output_count);
 		
-		Matrix classes = Matrix.outputToClass(outputs[1]);
+		Matrix classes = Matrix.outputToClass (outputs[1]);
+ 
+		 
+	 
 		double classesification_error = Matrix.numberOfDifferences(classes, ds.classes) / sample_count;
-
+	 
 		return new double[] { regression_error, classesification_error };
 	}
 
@@ -247,10 +275,18 @@ public class NeuronalNetwork {
 		DataSet validation = new DataSet(Matrix.split(inputMatrix,100,120), Matrix.split(outputMatrix,100,120), 3);
 		DataSet test = new DataSet(Matrix.split(inputMatrix,120,147), Matrix.split(outputMatrix,120,147), 3);
 		
-		System.out.println();
-		training.output.print();
-		trainFunction(training,validation,test);
+		 
+		double [] results =trainFunction(training,validation,test) ;
 		
+		 
+		System.out.println("traing regression " + results[0]);
+		System.out.println("traing classification " + results[1]);
+		
+		System.out.println("validation regression " + results[2]);
+		System.out.println("validation classification " + results[3]);
+		
+		System.out.println("test regression " + results[4]);
+		System.out.println("test classification " + results[5]);
 		System.out.println();
 		 
 		
@@ -283,7 +319,7 @@ public class NeuronalNetwork {
 		
 		
 		
-		 readTrainData();
+		readTrainData();
 	}
 
 }

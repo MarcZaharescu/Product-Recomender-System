@@ -40,6 +40,35 @@ final public class Matrix {
 
 		return temp;
 	}
+	
+	public static Matrix line(Matrix A, int line) {
+		int I = A.data.length;
+		int J = A.data[0].length;
+		Matrix temp = new Matrix(1, J);
+
+	 
+				for (int j = 0; j < J; j++)
+					temp.data[0][j] = A.data[line][j];
+				 
+
+
+		return temp;
+	}
+	public static Matrix element(Matrix A, int  number) {
+		int I = A.data.length;
+		int J = A.data[0].length;
+		Matrix temp = new Matrix(1, 1);
+
+			
+				for (int j = 0; j < J; j++)
+					for(int i=0;i<I;i++)
+						if(i+j==number)
+					temp.data[0][0] = A.data[i][j];
+				 
+
+
+		return temp;
+	}
 
 	public static double numberOfDifferences(Matrix A, Matrix B) {
 		double diff = 0;
@@ -50,6 +79,21 @@ final public class Matrix {
 					diff++;
 
 		return diff;
+	}
+	
+	public static Matrix approximateError(Matrix A)
+	{
+		Matrix C = new Matrix(A.data);
+		
+		for (int i = 0; i < A.I; i++)
+			for (int j = 0; j < A.J; j++)
+			{
+				if(C.data[i][j]>0.85)
+					C.data[i][j]=1;
+				else C.data[i][j]=0;
+			}
+		
+		return C;
 	}
 
 	public static Matrix transposition(Matrix A) {
@@ -86,10 +130,17 @@ final public class Matrix {
 		Matrix C = new Matrix(A.I, 1);
 
 		for (int i = 0; i < A.I; i++)
+		{	double max=0;
+			int o_class=0;
 			for (int j = 0; j < A.J; j++) {
-				if (A.data[i][j] != 0)
-					C.data[i][0] = j + 1;
+				if (A.data[i][j] >max)
+				{
+					max=A.data[i][j];
+					o_class=j;
+				}
 			}
+			C.data[i][0] = o_class+1;
+		}
 
 		return C;
 	}
@@ -112,6 +163,7 @@ final public class Matrix {
 		return C;
 	}
 
+	 
 	public static Matrix multiply(Matrix A, Matrix B) {
 		int I = A.data.length;
 		int J = A.data[0].length;
@@ -120,7 +172,7 @@ final public class Matrix {
 		if (J != I1)
 			throw new RuntimeException("Error: Wrong matrix dimentions");
 
-		Matrix C = new Matrix(J, I1);
+		Matrix C = new Matrix(I, J1);
 
 		for (int i = 0; i < C.I; i++)
 			for (int j = 0; j < C.J; j++)
@@ -193,9 +245,10 @@ final public class Matrix {
 		int J = A.data[0].length;
 		int I1 = B.data.length;
 		int J1 = B.data[0].length;
-
+    
+ 
 		Matrix C = new Matrix(I * I1, J * J1);
-
+		 
 		int y = -1;
 		for (int i = 0; i < I; i++) {
 			y++;
@@ -205,7 +258,11 @@ final public class Matrix {
 				k++;
 				for (int i1 = 0; i1 < I1; i1++)
 					for (int j1 = 0; j1 < J1; j1++) {
-						C.data[i + i1 + y][j + j1 + k] = A.data[i][j]
+
+						if(I1==1)
+							y=0;
+						 
+						C.data[i + i1 +y ][j + j1 + k] = A.data[i][j]
 								* B.data[i1][j1];
 
 					}
@@ -309,7 +366,18 @@ final public class Matrix {
 		F1 = classToOutput(F1);
 		F1.print();
 		System.out.println();
-
+		
+		System.out.println("krockner product");
+		double[][] a1 = { { 1}, { 2}, {3} ,{4}};
+		Matrix A1 = new Matrix(a1);
+		double[][] b1 = { { 1,2,3 }   };
+		Matrix B1 = new Matrix(b1);
+		Matrix I1 = krocknerMultiplication(A1, B1);
+		I1.print();
+		
+ 
+		 
+		 
 	}
 
 }
